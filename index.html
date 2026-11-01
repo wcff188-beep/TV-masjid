@@ -154,14 +154,15 @@
             iqomah: 5, 
             blackout: 3, 
             bgType: "image",
-            // Otomatis menarik file foto langsung dari folder GitHub Anda:
-            bgUrl: "353564.jpg", 
+            // INI NAMA FILE YANG BENAR SESUAI GITHUB ANDA:
+            bgUrl: "pngtree-the-beautiful-view-of-city-mecca-and-also-place-worship-kaaba-image_16167068.jpg", 
             eventName: "Ramadhan",
             eventDate: "2025-03-01",
             marquee: "Ikuti kajian rutin setiap hari Jum'at Ba'da Maghrib dan Minggu Ba'da Subuh • Harap nonaktifkan HP saat sholat berlangsung."
         };
 
-        let settings = JSON.parse(localStorage.getItem('masjidSettingsV17')) || defaultSettings;
+        // Ganti V18 agar memori di TV otomatis ter-reset menggunakan nama foto yang baru
+        let settings = JSON.parse(localStorage.getItem('masjidSettingsV18')) || defaultSettings;
         
         let systemState = 0; 
         let targetEventTime = null; 
@@ -220,7 +221,7 @@
             settings.eventDate = document.getElementById('input-date').value;
             settings.marquee = document.getElementById('input-marquee').value;
 
-            localStorage.setItem('masjidSettingsV17', JSON.stringify(settings));
+            localStorage.setItem('masjidSettingsV18', JSON.stringify(settings));
             applySettings();
             toggleModal();
             updateEventCountdown();
