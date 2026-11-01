@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display Masjid - Tema Full Background (Gambar & Video)</title>
+    <title>Display Masjid - Tema Full Background</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -26,7 +26,7 @@
 <body class="h-screen w-full flex flex-col">
 
     <!-- LAYER BACKGROUND (GAMBAR & VIDEO) -->
-    <div id="bg-container" class="absolute inset-0 overflow-hidden z-0">
+    <div id="bg-container" class="absolute inset-0 overflow-hidden z-0 bg-gray-900">
         <!-- Elemen untuk Background Gambar -->
         <div id="bg-image" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000"></div>
         
@@ -128,7 +128,7 @@
                     </div>
                     <p class="text-[11px] text-gray-600 leading-tight">
                         <b>Cara Google Drive:</b> Upload Foto/Video > Klik Kanan > Bagikan > Akses Umum: <b>"Siapa saja yang memiliki link"</b> > Salin Link > Paste di atas.<br>
-                        <i>*Catatan: Video harus berukuran kecil agar tidak buffering (disarankan < 30MB). Video akan diputar otomatis tanpa suara (Mute).</i>
+                        <i>Jika Google Drive tetap blank, gunakan web <b>postimages.org</b> untuk upload foto, lalu paste "Direct Link" nya ke sini.</i>
                     </p>
                 </div>
 
@@ -171,55 +171,59 @@
             nama: "Masjid Darussalam Al-Amin",
             alamat: "Kel.Kalibaru, Kec.Cilincing, Jakarta Utara",
             kota: "Jakarta",
-            bgType: "image", // "image" atau "video"
+            bgType: "image", 
             bgUrl: "https://images.unsplash.com/photo-1565552643952-25062c37dbec?auto=format&fit=crop&w=1920&q=80",
             eventName: "Ramadhan",
             eventDate: "2025-03-01",
-            marquee: "Ikuti kajian rutin setiap hari Jum'at Ba'da Maghrib dan Ahad Ba'da Subuh• Harap nonaktifkan HP saat sholat berlangsung."
+            // Teks sudah dirubah sesuai request:
+            marquee: "Ikuti kajian rutin setiap hari Jum'at Ba'da Maghrib dan Minggu Ba'da Subuh • Harap nonaktifkan HP saat sholat berlangsung."
         };
 
-        // Ambil data dari local storage, jika tidak ada pakai default
-        let settings = JSON.parse(localStorage.getItem('masjidSettingsV4')) || defaultSettings;
+        // Saya ubah ke V6 agar pengaturan lama tertimpa dengan teks yang baru
+        let settings = JSON.parse(localStorage.getItem('masjidSettingsV6')) || defaultSettings;
 
-        // Fungsi mengubah URL Google Drive agar bisa didownload/dibaca langsung
-        function convertDriveLink(url) {
+        function convertDriveLink(url, type) {
             if (!url) return "";
-            const match = url.match(/\/d\/(.+?)\//);
+            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+            
             if (match && match[1]) {
-                // Gunakan export=download agar video bisa stream lebih baik di tag <video>
-                return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+                const id = match[1];
+                if (type === 'image') {
+                    return `https://lh3.googleusercontent.com/d/${id}`;
+                } else {
+                    return `https://drive.google.com/uc?export=download&id=${id}`;
+                }
             }
             return url; 
         }
 
-        // Terapkan pengaturan ke layar
         function applySettings() {
             document.getElementById('display-nama').textContent = settings.nama;
             document.getElementById('display-alamat').textContent = settings.alamat;
             document.getElementById('display-marquee').textContent = settings.marquee;
             
-            // Terapkan Background (Logika Gambar vs Video)
-            const directUrl = convertDriveLink(settings.bgUrl);
+            const directUrl = convertDriveLink(settings.bgUrl, settings.bgType);
             const bgImg = document.getElementById('bg-image');
             const bgVid = document.getElementById('bg-video');
 
             if (settings.bgType === 'video') {
                 bgImg.classList.add('hidden');
                 bgVid.classList.remove('hidden');
-                // Hanya load ulang video jika URL-nya berubah agar tidak kedip
                 if (bgVid.src !== directUrl) {
                     bgVid.src = directUrl;
                     bgVid.load();
-                    bgVid.play().catch(e => console.log("Browser memblokir autoplay video:", e));
+                    bgVid.play().catch(e => console.log("Video auto-play error:", e));
                 }
             } else {
                 bgVid.classList.add('hidden');
                 bgVid.pause();
                 bgImg.classList.remove('hidden');
-                bgImg.style.backgroundImage = `url('${directUrl}')`;
+                
+                if (directUrl) {
+                    bgImg.style.backgroundImage = `url('${directUrl}')`;
+                }
             }
 
-            // Isi nilai di form pengaturan
             document.getElementById('input-nama').value = settings.nama;
             document.getElementById('input-alamat').value = settings.alamat;
             document.getElementById('input-kota').value = settings.kota;
@@ -246,7 +250,7 @@
             settings.eventDate = document.getElementById('input-date').value;
             settings.marquee = document.getElementById('input-marquee').value;
 
-            localStorage.setItem('masjidSettingsV4', JSON.stringify(settings));
+            localStorage.setItem('masjidSettingsV6', JSON.stringify(settings));
             applySettings();
             toggleModal();
             updateEventCountdown();
