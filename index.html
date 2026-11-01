@@ -154,14 +154,14 @@
             iqomah: 5, 
             blackout: 3, 
             bgType: "image",
-            // Foto Ka'bah Anda dipasang permanen di sini:
-            bgUrl: "pngtree-the-beautiful-view-of-city-mecca-and-also-place-worship-kaaba-image_16167068.jpg", 
+            // Menggunakan link gambar Ka'bah cadangan yang stabil & permanen:
+            bgUrl: "https://images.unsplash.com/photo-1565552643952-25062c37dbec?auto=format&fit=crop&w=1920&q=80", 
             eventName: "Ramadhan",
             eventDate: "2025-03-01",
             marquee: "Ikuti kajian rutin setiap hari Jum'at Ba'da Maghrib dan Minggu Ba'da Subuh • Harap nonaktifkan HP saat sholat berlangsung."
         };
 
-        let settings = JSON.parse(localStorage.getItem('masjidSettingsV12')) || defaultSettings;
+        let settings = JSON.parse(localStorage.getItem('masjidSettingsV13')) || defaultSettings;
         
         let systemState = 0; 
         let targetEventTime = null; 
@@ -220,7 +220,7 @@
             settings.eventDate = document.getElementById('input-date').value;
             settings.marquee = document.getElementById('input-marquee').value;
 
-            localStorage.setItem('masjidSettingsV12', JSON.stringify(settings));
+            localStorage.setItem('masjidSettingsV13', JSON.stringify(settings));
             applySettings();
             toggleModal();
             updateEventCountdown();
@@ -232,14 +232,12 @@
         const displayNames = { 'Imsak': 'Imsak', 'Fajr': 'Subuh', 'Sunrise': 'Syuruq', 'Dhuhr': 'Dzuhur', 'Asr': 'Ashar', 'Maghrib': 'Maghrib', 'Isha': 'Isya' };
         const headerColors = { 'Imsak': 'bg-[#16a34a]', 'Fajr': 'bg-[#3b82f6]', 'Sunrise': 'bg-[#0ea5e9]', 'Dhuhr': 'bg-[#f97316]', 'Asr': 'bg-[#a855f7]', 'Maghrib': 'bg-[#ef4444]', 'Isha': 'bg-[#4c1d95]' };
 
-        // JADWAL CADANGAN (FALLBACK) UTAMA AGAR LANGSUNG MUNCUL TANPA MENUNGGU LOADING
         const fallbackTimes = {
             'Imsak': '04:18', 'Fajr': '04:28', 'Sunrise': '05:43', 
             'Dhuhr': '12:01', 'Asr': '15:15', 'Maghrib': '17:58', 'Isha': '19:08'
         };
 
         async function fetchPrayerTimes() {
-            // LANGSUNG TAMPILKAN JADWAL AGAR TIDAK MACET DI "MEMUAT"
             prayerTimes = fallbackTimes;
             document.getElementById('tgl-hijri').textContent = "1 Jumadil Awal 1447 H";
             renderPrayerSchedule();
@@ -247,7 +245,6 @@
             try {
                 const date = new Date();
                 const d = date.getDate(), m = date.getMonth() + 1, y = date.getFullYear();
-                
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 3000);
 
@@ -259,7 +256,7 @@
                 document.getElementById('tgl-hijri').textContent = `${data.data.date.hijri.day} ${data.data.date.hijri.month.en} ${data.data.date.hijri.year}`;
                 renderPrayerSchedule();
             } catch (error) {
-                console.log("Menggunakan jadwal utama lokal.");
+                console.log("Menggunakan jadwal offline.");
             }
         }
 
