@@ -9,15 +9,12 @@
     <style>
         body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #000; }
         
-        /* Animasi Marquee */
         .marquee-container { background-color: #1a202c; color: white; padding: 8px 0; overflow: hidden; white-space: nowrap; position: relative; z-index: 20;}
         .marquee-content { display: inline-block; padding-left: 100%; animation: marquee 30s linear infinite; font-size: 1.1rem; }
         @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
-        /* Highlight sholat aktif */
         .active-prayer { box-shadow: 0 -4px 15px rgba(255, 255, 255, 0.8); z-index: 10; transform: scale(1.02); transition: all 0.3s ease; }
         
-        /* Custom Scrollbar Modal */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -25,32 +22,22 @@
 </head>
 <body class="h-screen w-full flex flex-col">
 
-    <!-- LAYER BACKGROUND (GAMBAR & VIDEO) -->
+    <!-- LAYER BACKGROUND -->
     <div id="bg-container" class="absolute inset-0 overflow-hidden z-0 bg-gray-900">
-        <!-- Elemen untuk Background Gambar -->
         <div id="bg-image" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000"></div>
-        
-        <!-- Elemen untuk Background Video -->
         <video id="bg-video" class="absolute inset-0 w-full h-full object-cover hidden" autoplay loop muted playsinline></video>
-        
-        <!-- Overlay gelap sedikit agar teks bawah tetap terbaca -->
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
     </div>
 
-    <!-- HEADER (Putih Transparan) -->
+    <!-- HEADER -->
     <header class="relative z-10 bg-white/95 backdrop-blur shadow-md flex items-center justify-between px-8 py-3">
-        <!-- Kiri: Jam -->
         <div class="flex-shrink-0 w-48">
             <h1 id="jam-digital" class="text-6xl font-extrabold text-gray-800 tracking-tight">00:00</h1>
         </div>
-        
-        <!-- Tengah: Info Masjid dengan Garis Pembatas Oranye -->
         <div class="flex-1 flex flex-col items-center justify-center border-l-4 border-r-4 border-orange-400 px-4">
             <h2 id="display-nama" class="text-3xl font-extrabold text-gray-900 tracking-wide">Masjid Darussalam Al-Amin</h2>
             <p id="display-alamat" class="text-gray-600 font-medium text-lg mt-1">Kel.Kalibaru, Kec.Cilincing, Jakarta Utara</p>
         </div>
-
-        <!-- Kanan: Tanggal -->
         <div class="flex-shrink-0 w-56 text-right">
             <p id="tgl-masehi" class="text-xl font-bold text-gray-800">Memuat...</p>
             <p id="tgl-hijri" class="text-gray-500 font-semibold mt-1">Memuat...</p>
@@ -59,47 +46,31 @@
 
     <!-- AREA TENGAH -->
     <main class="flex-1 relative z-10 flex flex-col justify-end pb-2">
-        <!-- Tombol Gear Settings -->
         <button onclick="toggleModal()" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-l-lg shadow-lg text-gray-700 transition">
             <i class="fas fa-cog text-2xl"></i>
         </button>
-
-        <!-- Teks Countdown -->
         <div class="px-6 flex justify-between items-end mb-2 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
-            <div id="next-prayer-info" class="bg-white/90 text-black px-4 py-1.5 rounded font-bold text-xl shadow-lg border-l-4 border-orange-500">
-                Memuat Waktu...
-            </div>
-            <div id="event-countdown" class="bg-white/90 text-black px-4 py-1.5 rounded font-bold text-xl shadow-lg border-r-4 border-green-600">
-                Memuat Acara...
-            </div>
+            <div id="next-prayer-info" class="bg-white/90 text-black px-4 py-1.5 rounded font-bold text-xl shadow-lg border-l-4 border-orange-500">Memuat Waktu...</div>
+            <div id="event-countdown" class="bg-white/90 text-black px-4 py-1.5 rounded font-bold text-xl shadow-lg border-r-4 border-green-600">Memuat Acara...</div>
         </div>
     </main>
 
-    <!-- JADWAL SHOLAT (7 KOTAK WARNA-WARNI) -->
-    <div class="relative z-20 bg-white grid grid-cols-7 border-t-2 border-gray-300 shadow-[0_-10px_20px_rgba(0,0,0,0.3)]" id="prayer-schedule">
-        <!-- Diisi via JavaScript -->
-    </div>
+    <!-- JADWAL SHOLAT -->
+    <div class="relative z-20 bg-white grid grid-cols-7 border-t-2 border-gray-300 shadow-[0_-10px_20px_rgba(0,0,0,0.3)]" id="prayer-schedule"></div>
 
     <!-- RUNNING TEXT -->
     <div class="marquee-container border-t-2 border-gray-700">
-        <div class="marquee-content" id="display-marquee">
-            Memuat informasi...
-        </div>
+        <div class="marquee-content" id="display-marquee">Memuat informasi...</div>
     </div>
 
-    <!-- ============================================== -->
     <!-- MODAL MENU PENGATURAN -->
-    <!-- ============================================== -->
     <div id="settings-modal" class="hidden fixed inset-0 bg-black/80 z-[100] flex items-center justify-center backdrop-blur-sm">
         <div class="bg-white w-[650px] max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
-            
             <div class="bg-gray-100 p-4 border-b flex justify-between items-center">
                 <h2 class="text-xl font-bold text-gray-800"><i class="fas fa-tools mr-2 text-blue-600"></i> Pengaturan Display</h2>
                 <button onclick="toggleModal()" class="text-gray-500 hover:text-red-500"><i class="fas fa-times text-2xl"></i></button>
             </div>
-
             <div class="p-6 overflow-y-auto space-y-4 flex-1">
-                <!-- Info Masjid -->
                 <div class="grid grid-cols-2 gap-4">
                     <div class="col-span-2">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Nama Masjid</label>
@@ -111,35 +82,35 @@
                     </div>
                 </div>
 
-                <!-- Background (Gambar / Video) -->
                 <div class="mt-4 bg-blue-50 p-4 rounded-lg border border-blue-200">
                     <div class="grid grid-cols-3 gap-3 mb-2">
                         <div class="col-span-1">
                             <label class="block text-sm font-bold text-blue-900 mb-1">Tipe Latar</label>
                             <select id="input-bg-type" class="w-full border border-blue-300 rounded px-3 py-2 outline-none focus:border-blue-500 font-bold text-sm">
                                 <option value="image">Gambar (Foto)</option>
-                                <option value="video">Video (Animasi/MP4)</option>
+                                <option value="video">Video (MP4)</option>
                             </select>
                         </div>
                         <div class="col-span-2">
-                            <label class="block text-sm font-bold text-blue-900 mb-1">Link URL (Drive / Langsung)</label>
-                            <input type="text" id="input-bg" placeholder="Paste link di sini..." class="w-full border border-blue-300 rounded px-3 py-2 outline-none focus:border-blue-500 text-sm">
+                            <label class="block text-sm font-bold text-blue-900 mb-1">Direct Link (URL Langsung)</label>
+                            <input type="text" id="input-bg" placeholder="https://..." class="w-full border border-blue-300 rounded px-3 py-2 outline-none focus:border-blue-500 text-sm">
                         </div>
                     </div>
-                    <p class="text-[11px] text-gray-600 leading-tight">
-                        <b>Cara Google Drive:</b> Upload Foto/Video > Klik Kanan > Bagikan > Akses Umum: <b>"Siapa saja yang memiliki link"</b> > Salin Link > Paste di atas.<br>
-                        <i>Jika Google Drive tetap blank, gunakan web <b>postimages.org</b> untuk upload foto, lalu paste "Direct Link" nya ke sini.</i>
+                    <p class="text-[12px] text-red-600 font-bold mt-2">JANGAN PAKAI GOOGLE DRIVE!</p>
+                    <p class="text-[11px] text-gray-700 leading-tight">
+                        <b>Cara Agar Foto 100% Muncul:</b><br>
+                        1. Buka website <b>postimages.org</b> di tab baru.<br>
+                        2. Pilih gambar masjid Anda.<br>
+                        3. Setelah selesai, copy link pada kolom <b>"Direct link"</b> (Link langsung) yang berakhiran .jpg atau .png.<br>
+                        4. Paste link tersebut ke kolom di atas.
                     </p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mt-4">
-                    <!-- Lokasi Jadwal -->
                     <div class="col-span-2 border-t pt-4">
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Kota (Untuk Jadwal Sholat API)</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Kota (Untuk Jadwal Sholat)</label>
                         <input type="text" id="input-kota" class="w-full border border-gray-300 rounded px-3 py-2 outline-none focus:border-blue-500">
                     </div>
-
-                    <!-- Hitung Mundur Acara -->
                     <div class="border-t pt-4">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Nama Acara (Kanan Bawah)</label>
                         <input type="text" id="input-event" placeholder="Contoh: Ramadhan" class="w-full border border-gray-300 rounded px-3 py-2 outline-none focus:border-blue-500">
@@ -148,25 +119,20 @@
                         <label class="block text-sm font-bold text-gray-700 mb-1">Tanggal Acara</label>
                         <input type="date" id="input-date" class="w-full border border-gray-300 rounded px-3 py-2 outline-none focus:border-blue-500">
                     </div>
-
-                    <!-- Running Text -->
                     <div class="col-span-2 border-t pt-4">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Running Text (Teks Berjalan)</label>
                         <textarea id="input-marquee" rows="2" class="w-full border border-gray-300 rounded px-3 py-2 outline-none focus:border-blue-500 text-sm"></textarea>
                     </div>
                 </div>
             </div>
-
             <div class="bg-gray-50 p-4 border-t flex justify-end gap-3">
                 <button onclick="toggleModal()" class="px-5 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 font-bold transition">Batal</button>
                 <button onclick="saveSettings()" class="px-5 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold transition shadow-md">Simpan Perubahan</button>
             </div>
         </div>
     </div>
-    <!-- ============================================== -->
 
     <script>
-        // --- 1. DATA PENGATURAN AWAL ---
         let defaultSettings = {
             nama: "Masjid Darussalam Al-Amin",
             alamat: "Kel.Kalibaru, Kec.Cilincing, Jakarta Utara",
@@ -175,34 +141,17 @@
             bgUrl: "https://images.unsplash.com/photo-1565552643952-25062c37dbec?auto=format&fit=crop&w=1920&q=80",
             eventName: "Ramadhan",
             eventDate: "2025-03-01",
-            // Teks sudah dirubah sesuai request:
             marquee: "Ikuti kajian rutin setiap hari Jum'at Ba'da Maghrib dan Minggu Ba'da Subuh • Harap nonaktifkan HP saat sholat berlangsung."
         };
 
-        // Saya ubah ke V6 agar pengaturan lama tertimpa dengan teks yang baru
-        let settings = JSON.parse(localStorage.getItem('masjidSettingsV6')) || defaultSettings;
-
-        function convertDriveLink(url, type) {
-            if (!url) return "";
-            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-            
-            if (match && match[1]) {
-                const id = match[1];
-                if (type === 'image') {
-                    return `https://lh3.googleusercontent.com/d/${id}`;
-                } else {
-                    return `https://drive.google.com/uc?export=download&id=${id}`;
-                }
-            }
-            return url; 
-        }
+        let settings = JSON.parse(localStorage.getItem('masjidSettingsV7')) || defaultSettings;
 
         function applySettings() {
             document.getElementById('display-nama').textContent = settings.nama;
             document.getElementById('display-alamat').textContent = settings.alamat;
             document.getElementById('display-marquee').textContent = settings.marquee;
             
-            const directUrl = convertDriveLink(settings.bgUrl, settings.bgType);
+            const directUrl = settings.bgUrl; // Langsung baca URL apa adanya
             const bgImg = document.getElementById('bg-image');
             const bgVid = document.getElementById('bg-video');
 
@@ -212,13 +161,12 @@
                 if (bgVid.src !== directUrl) {
                     bgVid.src = directUrl;
                     bgVid.load();
-                    bgVid.play().catch(e => console.log("Video auto-play error:", e));
+                    bgVid.play().catch(e => console.log(e));
                 }
             } else {
                 bgVid.classList.add('hidden');
                 bgVid.pause();
                 bgImg.classList.remove('hidden');
-                
                 if (directUrl) {
                     bgImg.style.backgroundImage = `url('${directUrl}')`;
                 }
@@ -240,7 +188,6 @@
 
         function saveSettings() {
             let oldKota = settings.kota;
-
             settings.nama = document.getElementById('input-nama').value;
             settings.alamat = document.getElementById('input-alamat').value;
             settings.kota = document.getElementById('input-kota').value;
@@ -250,86 +197,56 @@
             settings.eventDate = document.getElementById('input-date').value;
             settings.marquee = document.getElementById('input-marquee').value;
 
-            localStorage.setItem('masjidSettingsV6', JSON.stringify(settings));
+            localStorage.setItem('masjidSettingsV7', JSON.stringify(settings));
             applySettings();
             toggleModal();
             updateEventCountdown();
-
             if(oldKota !== settings.kota) fetchPrayerTimes();
         }
 
-        // --- 2. SISTEM JADWAL SHOLAT API ---
         let prayerTimes = {};
         const prayerNames = ['Imsak', 'Fajr', 'Sunrise', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'];
         const displayNames = { 'Imsak': 'Imsak', 'Fajr': 'Subuh', 'Sunrise': 'Syuruq', 'Dhuhr': 'Dzuhur', 'Asr': 'Ashar', 'Maghrib': 'Maghrib', 'Isha': 'Isya' };
-        
-        const headerColors = { 
-            'Imsak': 'bg-[#16a34a]', 
-            'Fajr': 'bg-[#3b82f6]',  
-            'Sunrise': 'bg-[#0ea5e9]', 
-            'Dhuhr': 'bg-[#f97316]', 
-            'Asr': 'bg-[#a855f7]',   
-            'Maghrib': 'bg-[#ef4444]', 
-            'Isha': 'bg-[#4c1d95]'    
-        };
+        const headerColors = { 'Imsak': 'bg-[#16a34a]', 'Fajr': 'bg-[#3b82f6]', 'Sunrise': 'bg-[#0ea5e9]', 'Dhuhr': 'bg-[#f97316]', 'Asr': 'bg-[#a855f7]', 'Maghrib': 'bg-[#ef4444]', 'Isha': 'bg-[#4c1d95]' };
 
         async function fetchPrayerTimes() {
             try {
                 const date = new Date();
                 const d = date.getDate(), m = date.getMonth() + 1, y = date.getFullYear();
-                
                 const response = await fetch(`https://api.aladhan.com/v1/timingsByCity/${d}-${m}-${y}?city=${settings.kota}&country=Indonesia&method=11`);
                 const data = await response.json();
-                
                 prayerTimes = data.data.timings;
-                
-                const hijri = data.data.date.hijri;
-                document.getElementById('tgl-hijri').textContent = `${hijri.day} ${hijri.month.en} ${hijri.year}`;
-                
+                document.getElementById('tgl-hijri').textContent = `${data.data.date.hijri.day} ${data.data.date.hijri.month.en} ${data.data.date.hijri.year}`;
                 renderPrayerSchedule();
-            } catch (error) { console.error("Error fetching API:", error); }
+            } catch (error) { console.error(error); }
         }
 
         function renderPrayerSchedule() {
             const container = document.getElementById('prayer-schedule');
             container.innerHTML = '';
-
             prayerNames.forEach(prayer => {
-                const time = prayerTimes[prayer];
                 const div = document.createElement('div');
                 div.id = `box-${prayer}`;
                 div.className = "flex flex-col text-center transition-all duration-300 bg-white";
-                
-                div.innerHTML = `
-                    <div class="${headerColors[prayer]} text-white font-bold py-2 text-sm tracking-wide shadow-inner">${displayNames[prayer]}</div>
-                    <div class="text-[2.2rem] font-black text-gray-900 py-3" id="time-${prayer}">${time}</div>
-                `;
+                div.innerHTML = `<div class="${headerColors[prayer]} text-white font-bold py-2 text-sm tracking-wide shadow-inner">${displayNames[prayer]}</div><div class="text-[2.2rem] font-black text-gray-900 py-3" id="time-${prayer}">${prayerTimes[prayer]}</div>`;
                 container.appendChild(div);
             });
         }
 
-        // --- 3. ENGINE WAKTU & COUNTDOWN ---
         function updateEventCountdown() {
             if(!settings.eventDate) return;
             const targetDate = new Date(settings.eventDate);
             targetDate.setHours(0,0,0,0);
-            const now = new Date();
-            const diff = targetDate - now;
+            const diff = targetDate - new Date();
             const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
-
             const display = document.getElementById('event-countdown');
-            if (daysLeft > 0) {
-                display.innerHTML = `${settings.eventName} <span class="text-red-600">-${daysLeft} Hari</span>`;
-            } else if (daysLeft === 0) {
-                display.innerHTML = `Hari Ini: ${settings.eventName}`;
-            } else {
-                display.innerHTML = `${settings.eventName} Telah Lewat`;
-            }
+            if (daysLeft > 0) display.innerHTML = `${settings.eventName} <span class="text-red-600">-${daysLeft} Hari</span>`;
+            else if (daysLeft === 0) display.innerHTML = `Hari Ini: ${settings.eventName}`;
+            else display.innerHTML = `${settings.eventName} Telah Lewat`;
         }
 
         function engine() {
             const now = new Date();
-            
             document.getElementById('jam-digital').textContent = now.toLocaleTimeString('id-ID', { hour12: false, hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':');
             document.getElementById('tgl-masehi').textContent = now.toLocaleDateString('id-ID', { weekday: 'long', day: '2-digit', month: 'long' });
 
@@ -363,14 +280,12 @@
             let m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             let s = Math.floor((diff % (1000 * 60)) / 1000);
 
-            let timeString = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-            document.getElementById('next-prayer-info').innerHTML = `${displayNames[nextP]} <span class="text-red-600">-${timeString}</span>`;
+            document.getElementById('next-prayer-info').innerHTML = `${displayNames[nextP]} <span class="text-red-600">-${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}</span>`;
 
             prayerNames.forEach(p => {
                 const box = document.getElementById(`box-${p}`);
                 const timeText = document.getElementById(`time-${p}`);
                 if(!box) return;
-                
                 if (p === nextP) {
                     box.classList.add('active-prayer', 'relative');
                     timeText.classList.add('text-blue-600');
