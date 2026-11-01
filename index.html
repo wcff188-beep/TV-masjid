@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display Masjid - Tema Full Background</title>
+    <title>Display Masjid - Tema Full Background (Gambar & Video)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #000; }
         
         /* Animasi Marquee */
         .marquee-container { background-color: #1a202c; color: white; padding: 8px 0; overflow: hidden; white-space: nowrap; position: relative; z-index: 20;}
@@ -25,8 +25,14 @@
 </head>
 <body class="h-screen w-full flex flex-col">
 
-    <!-- LAYER BACKGROUND -->
-    <div id="main-bg" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000" style="background-image: url('https://images.unsplash.com/photo-1565552643952-25062c37dbec?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');">
+    <!-- LAYER BACKGROUND (GAMBAR & VIDEO) -->
+    <div id="bg-container" class="absolute inset-0 overflow-hidden z-0">
+        <!-- Elemen untuk Background Gambar -->
+        <div id="bg-image" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-1000"></div>
+        
+        <!-- Elemen untuk Background Video -->
+        <video id="bg-video" class="absolute inset-0 w-full h-full object-cover hidden" autoplay loop muted playsinline></video>
+        
         <!-- Overlay gelap sedikit agar teks bawah tetap terbaca -->
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
     </div>
@@ -46,38 +52,38 @@
 
         <!-- Kanan: Tanggal -->
         <div class="flex-shrink-0 w-56 text-right">
-            <p id="tgl-masehi" class="text-xl font-bold text-gray-800">Kamis, 01 Februari</p>
-            <p id="tgl-hijri" class="text-gray-500 font-semibold mt-1">20 Rajab 1445</p>
+            <p id="tgl-masehi" class="text-xl font-bold text-gray-800">Memuat...</p>
+            <p id="tgl-hijri" class="text-gray-500 font-semibold mt-1">Memuat...</p>
         </div>
     </header>
 
-    <!-- AREA TENGAH (KOSONG, UNTUK MENAMPILKAN BACKGROUND) -->
+    <!-- AREA TENGAH -->
     <main class="flex-1 relative z-10 flex flex-col justify-end pb-2">
-        <!-- Tombol Gear Settings (Melayang di kanan) -->
+        <!-- Tombol Gear Settings -->
         <button onclick="toggleModal()" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white p-3 rounded-l-lg shadow-lg text-gray-700 transition">
             <i class="fas fa-cog text-2xl"></i>
         </button>
 
-        <!-- Teks Countdown (Melayang di atas jadwal sholat) -->
+        <!-- Teks Countdown -->
         <div class="px-6 flex justify-between items-end mb-2 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
             <div id="next-prayer-info" class="bg-white/90 text-black px-4 py-1.5 rounded font-bold text-xl shadow-lg border-l-4 border-orange-500">
                 Memuat Waktu...
             </div>
             <div id="event-countdown" class="bg-white/90 text-black px-4 py-1.5 rounded font-bold text-xl shadow-lg border-r-4 border-green-600">
-                Ramadhan -90 Hari
+                Memuat Acara...
             </div>
         </div>
     </main>
 
     <!-- JADWAL SHOLAT (7 KOTAK WARNA-WARNI) -->
     <div class="relative z-20 bg-white grid grid-cols-7 border-t-2 border-gray-300 shadow-[0_-10px_20px_rgba(0,0,0,0.3)]" id="prayer-schedule">
-        <!-- Akan diisi via JavaScript -->
+        <!-- Diisi via JavaScript -->
     </div>
 
-    <!-- RUNNING TEXT (Paling Bawah) -->
+    <!-- RUNNING TEXT -->
     <div class="marquee-container border-t-2 border-gray-700">
         <div class="marquee-content" id="display-marquee">
-            Ikuti kajian rutin setiap hari kamis ba'da zuhur
+            Memuat informasi...
         </div>
     </div>
 
@@ -97,7 +103,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="col-span-2">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Nama Masjid</label>
-                        <input type="text" id="input-nama" class="w-full border border-gray-300 rounded px-3 py-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        <input type="text" id="input-nama" class="w-full border border-gray-300 rounded px-3 py-2 outline-none focus:border-blue-500">
                     </div>
                     <div class="col-span-2">
                         <label class="block text-sm font-bold text-gray-700 mb-1">Alamat Singkat</label>
@@ -105,17 +111,31 @@
                     </div>
                 </div>
 
-                <!-- Background Drive -->
-                <div class="mt-4 bg-blue-50 p-4 rounded-lg border border-blue-100">
-                    <label class="block text-sm font-bold text-blue-800 mb-1"><i class="fab fa-google-drive mr-1"></i> Link Gambar Background (Google Drive)</label>
-                    <input type="text" id="input-bg" placeholder="Paste link Google Drive di sini..." class="w-full border border-blue-300 rounded px-3 py-2 outline-none focus:border-blue-500 text-sm mb-2">
-                    <p class="text-[11px] text-gray-600"><b>Cara:</b> Upload foto ke Google Drive > Klik Kanan > Bagikan (Share) > Ubah Akses Umum menjadi <b>"Siapa saja yang memiliki link"</b> > Salin Link > Paste di atas.</p>
+                <!-- Background (Gambar / Video) -->
+                <div class="mt-4 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div class="grid grid-cols-3 gap-3 mb-2">
+                        <div class="col-span-1">
+                            <label class="block text-sm font-bold text-blue-900 mb-1">Tipe Latar</label>
+                            <select id="input-bg-type" class="w-full border border-blue-300 rounded px-3 py-2 outline-none focus:border-blue-500 font-bold text-sm">
+                                <option value="image">Gambar (Foto)</option>
+                                <option value="video">Video (Animasi/MP4)</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-sm font-bold text-blue-900 mb-1">Link URL (Drive / Langsung)</label>
+                            <input type="text" id="input-bg" placeholder="Paste link di sini..." class="w-full border border-blue-300 rounded px-3 py-2 outline-none focus:border-blue-500 text-sm">
+                        </div>
+                    </div>
+                    <p class="text-[11px] text-gray-600 leading-tight">
+                        <b>Cara Google Drive:</b> Upload Foto/Video > Klik Kanan > Bagikan > Akses Umum: <b>"Siapa saja yang memiliki link"</b> > Salin Link > Paste di atas.<br>
+                        <i>*Catatan: Video harus berukuran kecil agar tidak buffering (disarankan < 30MB). Video akan diputar otomatis tanpa suara (Mute).</i>
+                    </p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mt-4">
                     <!-- Lokasi Jadwal -->
                     <div class="col-span-2 border-t pt-4">
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Kota (Untuk API Jadwal Sholat)</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Kota (Untuk Jadwal Sholat API)</label>
                         <input type="text" id="input-kota" class="w-full border border-gray-300 rounded px-3 py-2 outline-none focus:border-blue-500">
                     </div>
 
@@ -151,20 +171,23 @@
             nama: "Masjid Darussalam Al-Amin",
             alamat: "Kel.Kalibaru, Kec.Cilincing, Jakarta Utara",
             kota: "Jakarta",
+            bgType: "image", // "image" atau "video"
             bgUrl: "https://images.unsplash.com/photo-1565552643952-25062c37dbec?auto=format&fit=crop&w=1920&q=80",
             eventName: "Ramadhan",
             eventDate: "2025-03-01",
             marquee: "Ikuti kajian rutin setiap hari kamis ba'da zuhur • Harap nonaktifkan HP saat sholat berlangsung."
         };
 
-        let settings = JSON.parse(localStorage.getItem('masjidSettingsV3')) || defaultSettings;
+        // Ambil data dari local storage, jika tidak ada pakai default
+        let settings = JSON.parse(localStorage.getItem('masjidSettingsV4')) || defaultSettings;
 
-        // Fungsi mengubah URL Google Drive biasa menjadi URL Direct Image
+        // Fungsi mengubah URL Google Drive agar bisa didownload/dibaca langsung
         function convertDriveLink(url) {
-            if (!url) return defaultSettings.bgUrl;
+            if (!url) return "";
             const match = url.match(/\/d\/(.+?)\//);
             if (match && match[1]) {
-                return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+                // Gunakan export=download agar video bisa stream lebih baik di tag <video>
+                return `https://drive.google.com/uc?export=download&id=${match[1]}`;
             }
             return url; 
         }
@@ -175,14 +198,32 @@
             document.getElementById('display-alamat').textContent = settings.alamat;
             document.getElementById('display-marquee').textContent = settings.marquee;
             
-            // Terapkan Background
-            const directBgUrl = convertDriveLink(settings.bgUrl);
-            document.getElementById('main-bg').style.backgroundImage = `url('${directBgUrl}')`;
+            // Terapkan Background (Logika Gambar vs Video)
+            const directUrl = convertDriveLink(settings.bgUrl);
+            const bgImg = document.getElementById('bg-image');
+            const bgVid = document.getElementById('bg-video');
 
-            // Isi nilai di form
+            if (settings.bgType === 'video') {
+                bgImg.classList.add('hidden');
+                bgVid.classList.remove('hidden');
+                // Hanya load ulang video jika URL-nya berubah agar tidak kedip
+                if (bgVid.src !== directUrl) {
+                    bgVid.src = directUrl;
+                    bgVid.load();
+                    bgVid.play().catch(e => console.log("Browser memblokir autoplay video:", e));
+                }
+            } else {
+                bgVid.classList.add('hidden');
+                bgVid.pause();
+                bgImg.classList.remove('hidden');
+                bgImg.style.backgroundImage = `url('${directUrl}')`;
+            }
+
+            // Isi nilai di form pengaturan
             document.getElementById('input-nama').value = settings.nama;
             document.getElementById('input-alamat').value = settings.alamat;
             document.getElementById('input-kota').value = settings.kota;
+            document.getElementById('input-bg-type').value = settings.bgType || "image";
             document.getElementById('input-bg').value = settings.bgUrl;
             document.getElementById('input-event').value = settings.eventName;
             document.getElementById('input-date').value = settings.eventDate;
@@ -199,12 +240,13 @@
             settings.nama = document.getElementById('input-nama').value;
             settings.alamat = document.getElementById('input-alamat').value;
             settings.kota = document.getElementById('input-kota').value;
+            settings.bgType = document.getElementById('input-bg-type').value;
             settings.bgUrl = document.getElementById('input-bg').value;
             settings.eventName = document.getElementById('input-event').value;
             settings.eventDate = document.getElementById('input-date').value;
             settings.marquee = document.getElementById('input-marquee').value;
 
-            localStorage.setItem('masjidSettingsV3', JSON.stringify(settings));
+            localStorage.setItem('masjidSettingsV4', JSON.stringify(settings));
             applySettings();
             toggleModal();
             updateEventCountdown();
