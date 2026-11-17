@@ -1,8 +1,8 @@
-import { GoogleGenAI } from '@google/genai';
+const { GoogleGenAI } = require('@google/genai');
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Gunakan metode POST' });
   }
@@ -21,6 +21,7 @@ export default async function handler(req, res) {
 
     res.status(200).json({ jawaban: response.text });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Gagal menghubungi AI Coach' });
   }
-}
+};
